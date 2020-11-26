@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    
+    <title>TRABAJO-FINAL-MERIÑO</title>
+</head>
+<body>
+
+    <div id="principal">
+                                <nav class="nav-extended">
+                                        <div class="nav-wrapper blue-grey darken-1">
+                                        
+                                            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                                                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                                                <a href="#" class="brand-logo center">APP - MONITOREO JCM</a>
+                                            </ul>
+                                            <div class="nav-content">
+                                                <div class="nav-content">
+                                                <ul class="tabs tabs-transparent">
+                                                    <li class="tab"><a href="#test1">INDICADORES</a></li>
+                                                    <li class="tab"><a class="active" href="#test2">DIRECCIONES IP</a></li>
+                                                    <li class="tab"><a href="#test3">CLIENTES</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>       
+                                </nav>
+
+                                <div id="test1" class="col s12">
+                                    <div class="row">
+                                         <div class="col s12"></div>
+                                        <div id="indicadores" class="col s12">
+                                            <div class="row">
+                                                <div class="col s12">
+                                    
+                                                    <div class="row">
+                                                        <div class="input-field col s4">
+                                                            <select v-model="dir_ip" class="browser-default">
+                                                                <option value="0" disable selected>DIRECIONES IP</option>
+                                                                <option v-for="equipo of lista_equipos">{{equipo.dir_ip}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                        
+                                    <div class="row">
+                                    
+                                            <div class="col s4">
+                                                <div class="row">
+                                                    <div class="card blue-grey darken-1">
+                                                        <div class="card-content white-text">
+                                                            <span>CPU FREE%</span>
+                                                            <span class="card-title"> {{cpu_valor}} </span>
+                                                            <span class="card-title"> <br><br> </span>
+                                                        </div>
+                                                        <div class="card-action">
+                                                            <a href="#">{{estado_cpu}}</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="col s4">
+                                                <div class="row">
+                                                    <div class="card blue-grey darken-1">
+                                                        <div class="card-content white-text">
+                                                            <span>MEM.RAM</span>
+                                                            <span class="card-title"> TOTAL: {{ram_io_total}}GB</span>
+                                                            <span class="card-title"> EN USO: {{ram_io_usada}}GB</span>
+                                                            <span class="card-title"> LIBRE: {{ram_io_free}}GB - {{ram_io_porc}} %</span>
+                                                        </div>
+                                                            <div class="card-action">
+                                                                <a >{{estado_ram_io}}</a>
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                
+                                                    <div class="col s4">
+                                                        <div class="row">
+                                                            <div class="card blue-grey darken-1">
+                                                                <div class="card-content white-text">
+                                                                    <span>TRAFICO</span>
+                                                                    <div class="row">
+                                                                        <span class="card-title"> Interfaz: {{red}} </span>
+                                                                        <span class="card-title">Entrada: {{trafico_en}} </span>
+                                                                        <span class="card-title">Salida: {{trafico_sa}} </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                    </div>
+                                    <div class="row">
+                                        <div id="container"></div>
+                                    </div>
+                                </div>
+
+                                <div id="test2" class="col s12"><h4>LISTA DE EQUIPOS</h4>
+
+                                    <div class="row">
+                                    
+                                        <div class="col s8">
+                                            
+                                            <div class="card-panel blue-grey darken-1 ">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>HOSTname</th>
+                                                            <th>IP</th>
+                                                            <th>CLIENTE</th>
+                                                            <th>ACTIONS</th>
+                                                        </tr>
+                                                    </thead>
+                                            
+                                                    <tbody>
+                                                        <tr v-for="equipo of lista_equipos">
+                                                            <td>{{ equipo.hostname }}</td>
+                                                            <td>{{ equipo.dir_ip }}</td>
+                                                            <td>{{ equipo.cliente }}</td>
+                                                            <td >
+                                                                <a class="btn-floating btn-small waves-effect waves-light red " v-on:click="eliminarequipos(equipo.id_host)"><i class="material-icons">delete</i></a>
+                                                                <a class="btn-floating btn-small waves-effect waves-light blue" v-on:click="editarequipos( equipo.hostname, equipo.dir_ip, equipo.fecha_carga, equipo.cliente)"><i class="material-icons">mode_edit</i></a>
+                                                            </td>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            
+                                        </div>
+                                    
+                                        <div class="col s4">
+
+                                            <div class="card-panel blue-grey darken-1">
+                                            
+                                                <div class="row">
+                                                    <div class="input-field col s12"><i class="material-icons">laptop_windows</i>
+                                                        <input v-model="hostname" type="text" placeholder="HOSTname">
+                                                        <label>Nombre/numero del Equipo</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="input-field col s12"><i class="material-icons">router</i>
+                                                        <input v-model="dir_ip" type="text" placeholder="Direccion IP">
+                                                        <label>Ingrese IP</label>
+                                                    </div>
+                                                </div>
+
+                                                    <div class="row">
+                                                        <div class="input-field col s6">
+                                                            <input v-model="fecha_carga" type="date" placeholder="">
+                                                            <label>Ingrese Fecha</label>
+                                                        </div>
+                                                        
+                                                        <div class="input-field col s6">
+                                                            <div class="row">
+                                                                <div class="col s6"></div>
+                                                                
+                                                                <div id="DIRECIONES IP" class="col s12">
+                                                    
+                                                                    <div class="row">
+                                                                        <div class="col s12">
+                                                            
+                                                                            <div class="row">
+                                                                                <div class="input-field col s12">
+                                                                                    <select v-model="cliente" class="browser-default">
+                                                                                        <option value="0" disable selected>cliente</option>
+                                                                                        <option v-for="cliente of lista_clientes">{{cliente.id_cliente}}</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                <div class="row">
+                                                    <div class="button-field col s6">
+                                                        <button v-on:click="guardarequipos()" class="btn waves-effect waves-light" type="submit">Guardar</button>
+                                                    </div>
+                                                    <div class="button-field col s6">
+                                                        <button v-on:click="actualizarequipos()" class="btn waves-effect waves-light" type="submit">Actualizar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+            
+            
+                                <div id="test3" class="col s12"><h4>LISTA DE CLIENTES</h4>
+
+                                        <div class="row">
+                                            
+                                            <div class="col s8">
+
+                                                <div class="card-panel blue-grey darken-1">
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>RAZON SOCIAL</th>
+                                                                <th>CORREO ELECTRONICO</th>
+                                                                <Th>TELEFONO</Th>
+                                                                <th>ACTIONS</th>
+                                                            </tr>
+                                                        </thead>
+                                                
+                                                        <tbody>
+                                                            <tr v-for="cliente of lista_clientes">
+                                                                <td>{{ cliente.razon_social }}</td>
+                                                                <td>{{ cliente.correo_electronico }}</td>
+                                                                <td>{{ cliente.telefono }}</td>
+                                                                <td >
+                                                                    <a class="btn-floating btn-small waves-effect waves-light red " v-on:click="eliminarclientes(cliente.id_cliente)"><i class="material-icons">delete</i></a>
+                                                                    <a class="btn-floating btn-small waves-effect waves-light blue" v-on:click="editarclientes( cliente.razon_social, cliente.nombre, cliente.apellido, cliente.correo_electronico, cliente.telefono)"><i class="material-icons">mode_edit</i></a>
+                                                                </td>
+
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                            <div class="col s4">
+
+                                                <div class="card-panel blue-grey darken-1">
+                                                
+                                                    <div class="row">
+                                                        <div class="input-field col s12"><i class="material-icons">business</i>
+                                                            <input v-model="razon_social" type="text" placeholder="razon social">
+                                                            <label>ingrese razon social</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="input-field col s6"><i class="material-icons">perm_identity</i>
+                                                            <input v-model="nombre" type="text" placeholder="nombre">
+                                                            <label>Ingrese nombre</label>
+                                                        </div>
+                                                        <div class="input-field col s6"><i class="material-icons">perm_identity</i>
+                                                            <input v-model="apellido" type="text" placeholder="apellido">
+                                                            <label>Ingrese apellido</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="input-field col s12"><i class="material-icons">mail_outline</i>
+                                                            <input v-model="correo_electronico" type="text" placeholder="correo_electronico">
+                                                            <label>Ingrese Email</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="input-field col s12"><i class="material-icons">phone</i>
+                                                            <input v-model="telefono" type="text" placeholder="ingrese telefono">
+                                                            <label>Ingrese Telefono del Clientes</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="button-field col s6">
+                                                        <button v-on:click="guardarclientes()" class="btn-small teal accent-5">Guardar</button>
+                                                        </div>
+                                                        <div class="button-field col s6">
+                                                            <button v-on:click="actualizarclientes()" class="btn-small teal accent-5">Actualizar</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+        
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>;
+    <script src="https://code.highcharts.com/highcharts.js"></script>;
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>;
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>;
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js "></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js "></script>
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js "></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>
+            <script src="index.js "></script>
+            <script>M.AutoInit();</script>
+            <script src="grafico.js"></script>
+       
+        
+</body>
+</html>
